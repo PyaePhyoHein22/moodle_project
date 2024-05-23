@@ -1,0 +1,86 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_mycourse/mycourse
+
+    This template displays a tabbed interface with courses grouped by year in the MyCourse block.
+
+    Classes required for JS:
+    * nav-item
+    * nav-link
+    * tab-pane
+    * list-group
+    * list-group-flush
+
+    Data attributes required for JS:
+    * id
+    * data-toggle
+    * href
+    * role
+    * aria-controls
+    * aria-selected
+
+    Context variables required for this template:
+    * mycoursecontents
+
+    Example context (json):
+    {
+        "mycoursecontents": [
+            {
+                "year": "2022",
+                "active": true,
+                "courses": [
+                    {"name": "Course 1", "link": "https://example.com/course1"},
+                    {"name": "Course 2", "link": "https://example.com/course2"}
+                ]
+            }
+        ]
+    }
+}}
+<div class="tab-container">
+    {{! Build Year Tabs}}
+    <ul class="nav nav-tabs" role="tablist">
+        {{#mycoursecontents}}
+        <li class="nav-item">
+            <a class="nav-link {{#active}}active{{/active}}" id="tab-{{year}}" data-toggle="tab" href="#content-{{year}}" role="tab" aria-controls="content-{{year}}" aria-selected="{{#active}}true{{/active}}">{{year}}</a>
+        </li>
+        {{/mycoursecontents}}
+    </ul>
+
+    {{! Courses by year}}
+    <div class="tab-content">
+        {{#mycoursecontents}}
+        <div class="tab-pane fade {{#active}}show active{{/active}}" id="content-{{year}}" role="tabpanel" aria-labelledby="tab-{{year}}">
+            <ul class="list-group list-group-flush">
+                {{#courses}}
+                    <li class="list-group-item">
+                        <a href="/moodle/course/view.php?id={{id}}">{{fullname}}</a>
+                    </li>
+                {{/courses}}
+                {{^courses}} {{!If there are no courses.}}
+                <li class="list-group-item">
+                    <div class="alert alert-warning" role="alert">{{nocourse}}</div>
+                </li>
+                {{/courses}}
+            </ul>
+        </div>
+        {{/mycoursecontents}}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
